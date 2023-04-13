@@ -102,3 +102,19 @@ class AuthUpdateSuccess extends AuthState {
 class AuthUpdateFailed extends AuthState {
   const AuthUpdateFailed({String? message}) : super(message: message);
 }
+
+// image
+@immutable
+class AuthImageLoading extends AuthState {
+  const AuthImageLoading() : super();
+}
+
+@immutable
+class AuthImageSuccess extends AuthState {
+  const AuthImageSuccess({AuthData? data}) : super(data: data);
+}
+
+@immutable
+class AuthImageFailed extends AuthState {
+  const AuthImageFailed({String? message}) : super(message: message);
+}

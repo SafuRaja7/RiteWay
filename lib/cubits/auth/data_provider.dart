@@ -112,4 +112,54 @@ class AuthDataProvider {
       throw Exception(e.toString());
     }
   }
+
+  static Future<String> uploadImage(XFile? file) async {
+    try {
+      String link = '';
+      if (file != null) {
+        Reference ref = FirebaseStorage.instance
+            .ref('/users_prod/${file.path.split('/').last}')
+            .child(file.path);
+
+        await ref.putFile(File(file.path));
+
+        String url = await ref.getDownloadURL();
+        link = url;
+      }
+
+      return link;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<List<AuthData>> addImage(
+      XFile? image, AuthData authData) async {
+    try {
+      final raw = await userCollection.doc(authData.id).get();
+      Map<String, dynamic> data = raw.data() ?? {};
+
+      String url = await uploadImage(image);
+
+      List images = data['images'] ?? [];
+      images.add({
+        'url': url,
+      });
+
+      await userCollection.doc(authData.id).set({
+        'images': images,
+      });
+
+      List<AuthData> imgs = List.generate(
+        images.length,
+        (i) => AuthData.fromMap(
+          images[i],
+        ),
+      );
+
+      return imgs;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

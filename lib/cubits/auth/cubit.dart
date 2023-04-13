@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:riteway/cubits/auth/repo.dart';
 import 'package:riteway/models/auth_data.dart';
 
@@ -61,10 +64,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> updateData(AuthData authData,int index) async {
+  Future<void> updateData(AuthData authData, int index) async {
     emit(const AuthUpdateLoading());
     try {
-      await repo.updateAuth(authData,index);
+      await repo.updateAuth(authData, index);
 
       emit(
         const AuthUpdateSuccess(),
@@ -72,6 +75,23 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(
         AuthUpdateFailed(message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> addImage(XFile image, AuthData authData) async {
+    emit(
+      const AuthImageLoading(),
+    );
+    try {
+      await AuthDataProvider.addImage(image, authData);
+
+      emit(
+        const AuthImageSuccess(),
+      );
+    } catch (e) {
+      emit(
+        AuthImageFailed(message: e.toString()),
       );
     }
   }

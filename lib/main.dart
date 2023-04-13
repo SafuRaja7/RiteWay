@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:riteway/app_routes.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
+import 'package:riteway/providers/image_picker_provider.dart';
 import 'package:riteway/screens/driver/driver.dart';
 import 'package:riteway/screens/login/login.dart';
 import 'package:riteway/screens/profile/profile.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         BlocProvider(create: (context) => AuthCubit()),
+        ChangeNotifierProvider(create: (context) => ImagePickerProvider())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

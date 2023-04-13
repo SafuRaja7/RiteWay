@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
@@ -27,12 +32,14 @@ class _ProfileState extends State<Profile> {
     authCubit.fetch();
   }
 
+  final User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
+    String imageUrl = '';
     App.init(context);
     final authCubit = AuthCubit.cubit(context, true);
     final authData = authCubit.state.data;
-
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -70,15 +77,143 @@ class _ProfileState extends State<Profile> {
                         ],
                       ),
                       Space.y1!,
-                      CircleAvatar(
-                        radius: AppDimensions.normalize(20),
-                        backgroundColor: AppTheme.c!.primary!.withAlpha(100),
-                        child: Text(
-                          authData!.fullName.substring(0, 2).toUpperCase(),
-                          style: AppText.h3!.copyWith(
-                            color: AppTheme.c!.primary,
-                          ),
-                        ),
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                              radius: AppDimensions.normalize(20),
+                              backgroundColor:
+                                  AppTheme.c!.primary!.withAlpha(100),
+                              child: FadeInImage(
+                                placeholder: const AssetImage(
+                                  'assets/applogo.png',
+                                ),
+                                image: NetworkImage(authData!.url!),
+                              )),
+                          Positioned(
+                            right: 0.5,
+                            bottom: 0.5,
+                            child: InkWell(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return Dialog(
+                                      child: Container(
+                                        padding: Space.all(0.5),
+                                        height: AppDimensions.normalize(100),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () =>
+                                                      Navigator.pop(context),
+                                                  child:
+                                                      const Icon(Icons.close),
+                                                )
+                                              ],
+                                            ),
+                                            Space.y1!,
+                                            IconButton(
+                                              onPressed: () async {
+                                                ImagePicker imagePicker =
+                                                    ImagePicker();
+                                                XFile? file =
+                                                    await imagePicker.pickImage(
+                                                  source: ImageSource.gallery,
+                                                );
+
+                                                if (file == null) return;
+                                                String uniqueFileName =
+                                                    DateTime.now()
+                                                        .millisecondsSinceEpoch
+                                                        .toString();
+
+                                                Reference referenceRoot =
+                                                    FirebaseStorage.instance
+                                                        .ref();
+                                                Reference referenceDirImages =
+                                                    referenceRoot
+                                                        .child('user_prod');
+
+                                                Reference
+                                                    referenceImageToUpload =
+                                                    referenceDirImages
+                                                        .child(uniqueFileName);
+
+                                                try {
+                                                  await referenceImageToUpload
+                                                      .putFile(File(file.path));
+                                                  imageUrl =
+                                                      await referenceImageToUpload
+                                                          .getDownloadURL();
+
+                                                  print(
+                                                      "The Url Of the image is  $imageUrl");
+                                                } catch (error) {
+                                                  throw Exception(
+                                                    error.toString(),
+                                                  );
+                                                }
+                                              },
+                                              icon: const Icon(
+                                                Icons.camera_alt,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Space.y2!,
+                                            InkWell(
+                                              onTap: () async {
+                                                await updateImageUrl(
+                                                  user!.uid,
+                                                  imageUrl,
+                                                );
+                                                // ignore: use_build_context_synchronously
+                                                Navigator.pop(context);
+                                              },
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Container(
+                                                height:
+                                                    AppDimensions.normalize(17),
+                                                width:
+                                                    AppDimensions.normalize(70),
+                                                decoration: BoxDecoration(
+                                                  color: AppTheme.c!.primary,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ),
+                                                child: const Center(
+                                                  child: Text("Upload Image"),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppTheme.c!.primary!.withAlpha(200),
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                       Space.y1!,
                       Text(
@@ -287,5 +422,20 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     );
+  }
+
+  Future<void> updateImageUrl(String userId, String imageUrl) async {
+    final usersProdRef = FirebaseFirestore.instance.collection('users_prod');
+    final docRef = usersProdRef.doc(userId);
+
+    try {
+      await docRef.update({
+        'url': imageUrl,
+      });
+      print('Image URL updated successfully');
+    } catch (error) {
+      print('Error updating image URL: $error');
+      rethrow;
+    }
   }
 }

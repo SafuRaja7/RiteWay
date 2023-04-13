@@ -51,6 +51,10 @@ dependencies:
   firebase_core: ^2.3.0
   cloud_firestore: ^4.1.0
   firebase_storage: ^11.0.6
+
+  # media handling
+  image_picker: ^0.8.5
+  cached_network_image: ^3.2.3
   
 
 dev_dependencies:
