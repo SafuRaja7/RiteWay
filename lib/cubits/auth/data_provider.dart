@@ -2,7 +2,7 @@ part of 'cubit.dart';
 
 class AuthDataProvider {
   static final firebaseFirestore = FirebaseFirestore.instance;
-  static final userCollection = firebaseFirestore.collection('users');
+  static final userCollection = firebaseFirestore.collection('users_prod');
 
   static Future<AuthData> fetch() async {
     try {
@@ -90,6 +90,26 @@ class AuthDataProvider {
       await FirebaseAuth.instance.signOut();
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
+    }
+  }
+
+  static Future<void> updateAuth(AuthData authData, int index) async {
+    try {
+      final raw = await userCollection.doc(authData.id).get();
+      List data = raw.data()!['users_prod'];
+
+      data.removeAt(index);
+
+      data.insert(
+        index,
+        authData.toMap(),
+      );
+
+      await userCollection.doc(authData.id).set(
+        {'users_prod': data},
+      );
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

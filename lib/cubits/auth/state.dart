@@ -83,3 +83,22 @@ class AuthLogoutSuccess extends AuthState {
 class AuthLogoutFailed extends AuthState {
   const AuthLogoutFailed({String? message}) : super(message: message);
 }
+
+// update
+@immutable
+class AuthUpdateDefault extends AuthState {}
+
+@immutable
+class AuthUpdateLoading extends AuthState {
+  const AuthUpdateLoading() : super();
+}
+
+@immutable
+class AuthUpdateSuccess extends AuthState {
+  const AuthUpdateSuccess() : super();
+}
+
+@immutable
+class AuthUpdateFailed extends AuthState {
+  const AuthUpdateFailed({String? message}) : super(message: message);
+}

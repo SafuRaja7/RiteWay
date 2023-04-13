@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:riteway/app_routes.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
-import 'package:riteway/screens/profile/profile.dart';
-import 'package:riteway/screens/signup/signup.dart';
+import 'package:riteway/screens/driver/driver.dart';
+import 'package:riteway/screens/rider/rider.dart';
 import 'package:riteway/widgets/app_button.dart';
 import 'package:riteway/widgets/custom_snackbar.dart';
 import 'package:riteway/widgets/custom_text_field.dart';
+import 'package:riteway/widgets/form_data.dart';
 import 'package:riteway/widgets/screen.dart';
 
 class Login extends StatefulWidget {
@@ -53,7 +55,7 @@ class _BodyState extends State<Login> {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return const Profile();
+                      return const Driver();
                     },
                   ),
                 );
@@ -62,7 +64,7 @@ class _BodyState extends State<Login> {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return const SignUp();
+                      return const Rider();
                     },
                   ),
                 );
@@ -76,15 +78,18 @@ class _BodyState extends State<Login> {
           padding: Space.all(1),
           child: FormBuilder(
             key: _formKey,
+            initialValue: FormData.initalValues(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Space.yf(5),
                 Hero(
                   tag: 'logo',
-                  child: Image.asset(
-                    'assets/applogo.png',
-                    height: AppDimensions.normalize(30),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/applogo.png',
+                      height: AppDimensions.normalize(70),
+                    ),
                   ),
                 ),
                 Space.y!,
@@ -156,12 +161,8 @@ class _BodyState extends State<Login> {
                         style: AppText.l1,
                       ),
                       TextButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUp(),
-                          ),
-                        ),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, AppRoutes.signup),
                         child: Text(
                           'Sign Up',
                           style: AppText.l1b,

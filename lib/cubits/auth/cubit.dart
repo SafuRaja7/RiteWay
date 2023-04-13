@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:riteway/cubits/auth/repo.dart';
 import 'package:riteway/models/auth_data.dart';
 
 part 'data_provider.dart';
@@ -16,6 +17,8 @@ class AuthCubit extends Cubit<AuthState> {
       BlocProvider.of<AuthCubit>(context, listen: listen);
 
   AuthCubit() : super(AuthDefault());
+
+  final repo = AuthRepository();
 
   Future<void> fetch() async {
     emit(const AuthFetchLoading());
@@ -55,6 +58,21 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthSignUpSuccess(data: data));
     } catch (e) {
       emit(AuthSignUpFailed(message: e.toString()));
+    }
+  }
+
+  Future<void> updateData(AuthData authData,int index) async {
+    emit(const AuthUpdateLoading());
+    try {
+      await repo.updateAuth(authData,index);
+
+      emit(
+        const AuthUpdateSuccess(),
+      );
+    } catch (e) {
+      emit(
+        AuthUpdateFailed(message: e.toString()),
+      );
     }
   }
 
