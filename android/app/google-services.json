@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "993341139790",
+    "firebase_url": "https://riteway-f9e82-default-rtdb.firebaseio.com",
+    "project_id": "riteway-f9e82",
+    "storage_bucket": "riteway-f9e82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993341139790:android:61099f3d42d526f4ce0c1f",
+        "android_client_info": {
+          "package_name": "com.example.rite_wayy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993341139790-vkornv6n8ppjeu146nvlb3vuurhretbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlDO1m4zGClB7xwrq9niW76kB4mVU7hSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993341139790-vkornv6n8ppjeu146nvlb3vuurhretbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993341139790:android:3f6e50c001f05a00ce0c1f",
+        "android_client_info": {
+          "package_name": "com.example.riteway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993341139790-vkornv6n8ppjeu146nvlb3vuurhretbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlDO1m4zGClB7xwrq9niW76kB4mVU7hSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993341139790-vkornv6n8ppjeu146nvlb3vuurhretbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
