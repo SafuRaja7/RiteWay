@@ -3,12 +3,11 @@ import 'dart:convert';
 
 class AuthData {
   final String id;
-  final String fullName;
+  final String? fullName;
   final String email;
   final String type;
   final String age;
   final String gender;
-  final String? url;
   AuthData({
     required this.id,
     required this.fullName,
@@ -16,7 +15,6 @@ class AuthData {
     required this.type,
     required this.age,
     required this.gender,
-    this.url,
   });
 
   AuthData copyWith({
@@ -26,7 +24,6 @@ class AuthData {
     String? type,
     String? age,
     String? gender,
-    String? url,
   }) {
     return AuthData(
       id: id ?? this.id,
@@ -35,7 +32,6 @@ class AuthData {
       type: type ?? this.type,
       age: age ?? this.age,
       gender: gender ?? this.gender,
-      url: url ?? this.url,
     );
   }
 
@@ -47,7 +43,6 @@ class AuthData {
       'type': type,
       'age': age,
       'gender': gender,
-      'url': url,
     };
   }
 
@@ -59,7 +54,6 @@ class AuthData {
       type: map['type'] as String,
       age: map['age'] as String,
       gender: map['gender'] as String,
-      url: map['url'] != null ? map['url'] as String : null,
     );
   }
 
@@ -70,31 +64,28 @@ class AuthData {
 
   @override
   String toString() {
-    return 'AuthData(id: $id, fullName: $fullName, email: $email, type: $type, age: $age, gender: $gender, url: $url)';
+    return 'AuthData(id: $id, fullName: $fullName, email: $email, type: $type, age: $age, gender: $gender,)';
   }
 
   @override
   bool operator ==(covariant AuthData other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.fullName == fullName &&
-      other.email == email &&
-      other.type == type &&
-      other.age == age &&
-      other.gender == gender &&
-      other.url == url;
+
+    return other.id == id &&
+        other.fullName == fullName &&
+        other.email == email &&
+        other.type == type &&
+        other.age == age &&
+        other.gender == gender;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      fullName.hashCode ^
-      email.hashCode ^
-      type.hashCode ^
-      age.hashCode ^
-      gender.hashCode ^
-      url.hashCode;
+        fullName.hashCode ^
+        email.hashCode ^
+        type.hashCode ^
+        age.hashCode ^
+        gender.hashCode;
   }
 }

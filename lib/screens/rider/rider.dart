@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:riteway/app_routes.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
-import 'package:riteway/cubits/auth/cubit.dart';
 import 'package:riteway/widgets/custom_text_field.dart';
 
 class Rider extends StatefulWidget {
@@ -16,7 +15,6 @@ class _RiderState extends State<Rider> {
   @override
   Widget build(BuildContext context) {
     App.init(context);
-    final authCubit = AuthCubit.cubit(context);
 
     return Scaffold(
       backgroundColor: Colors.white,

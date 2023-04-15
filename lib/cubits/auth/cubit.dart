@@ -26,6 +26,8 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> fetch() async {
     emit(const AuthFetchLoading());
     try {
+
+      
       final data = await AuthDataProvider.fetch();
 
       emit(AuthFetchSuccess(data: data));

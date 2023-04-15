@@ -82,7 +82,7 @@ class _UsersListScreenState extends State<UsersList> {
                                 Icons.flutter_dash,
                               ),
                             ),
-                            title: Text(user.fullName),
+                            title: Text(user.fullName!),
                             subtitle: Text(user.email),
                           ),
                           Divider(

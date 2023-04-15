@@ -22,4 +22,8 @@ class ImagePickerProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void delete(XFile file) {
+    notifyListeners();
+  }
 }
