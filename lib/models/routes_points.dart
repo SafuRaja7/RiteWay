@@ -8,7 +8,7 @@ class RoutePoints {
   final int? stop;
   RoutePoints({
     this.name,
-    this.fare,
+  this.fare,
     this.routeId,
     this.stop,
   });

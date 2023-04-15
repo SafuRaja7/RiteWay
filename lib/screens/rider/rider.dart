@@ -23,17 +23,6 @@ class _RiderState extends State<Rider> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () {
-            authCubit.logout();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRoutes.login,
-              (Route<dynamic> route) => false,
-            );
-          },
-        ),
         centerTitle: true,
         actions: [
           InkWell(
