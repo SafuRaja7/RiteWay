@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:riteway/app_routes.dart';
-import 'package:riteway/configs/app_typography.dart';
+import 'package:riteway/configs/app.dart';
+import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
+import 'package:riteway/widgets/app_button.dart';
 
 class Driver extends StatefulWidget {
   const Driver({super.key});
@@ -12,19 +14,17 @@ class Driver extends StatefulWidget {
 
 class _DriverState extends State<Driver> {
   @override
-  void initState() {
-    super.initState();
-    final authCubit = AuthCubit.cubit(context);
-    authCubit.fetch();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final authCubit = AuthCubit.cubit(context, true);
+    App.init(context);
+    final authCubit = AuthCubit.cubit(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: BackButton(
+          color: Colors.black,
           onPressed: () {
             authCubit.logout();
             Navigator.pushNamedAndRemoveUntil(
@@ -36,30 +36,98 @@ class _DriverState extends State<Driver> {
         ),
         centerTitle: true,
         actions: [
-          BackButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                AppRoutes.profile,
-              );
-            },
-          ),
+          InkWell(
+            onTap: () => Navigator.pushNamed(context, AppRoutes.profile),
+            child: const CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey,
+              child: Icon(
+                Icons.person,
+                color: Colors.black,
+              ),
+            ),
+          )
         ],
         title: Text(
           'Driver',
-          style: AppText.b1,
+          style: AppText.b1!.cl(Colors.black),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Hello Driver',
-              style: AppText.h1b,
-            )
-          ],
+      bottomSheet: const BottomSheet(),
+      body: Column(
+        children: const [
+          Image(
+            image: AssetImage(
+              'assets/map.png',
+            ),
+            filterQuality: FilterQuality.high,
+            fit: BoxFit.contain,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BottomSheet extends StatelessWidget {
+  const BottomSheet({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Divider(
+            thickness: 2,
+            color: Colors.grey,
+            indent: 165,
+            endIndent: 165,
+          ),
+          Space.y!,
+          AppButton(
+            width: AppDimensions.normalize(100),
+            child: Text(
+              'View Users',
+              style: AppText.l1b!.cl(Colors.white),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.usersList);
+            },
+          ),
+          Space.y!,
+          AppButton(
+            width: AppDimensions.normalize(100),
+            child: Text(
+              'View Routes',
+              style: AppText.l1b!.cl(Colors.white),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.routesNameScreen,
+              );
+            },
+          ),
+          Space.y1!,
+        ],
       ),
     );
   }

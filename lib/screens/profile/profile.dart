@@ -41,8 +41,12 @@ class _ProfileState extends State<Profile> {
     final authCubit = AuthCubit.cubit(context, true);
     final authData = authCubit.state.data;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: BackButton(
+          color: Colors.black,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -80,15 +84,16 @@ class _ProfileState extends State<Profile> {
                       Stack(
                         children: [
                           CircleAvatar(
-                              radius: AppDimensions.normalize(20),
-                              backgroundColor:
-                                  AppTheme.c!.primary!.withAlpha(100),
-                              child: FadeInImage(
-                                placeholder: const AssetImage(
-                                  'assets/applogo.png',
-                                ),
-                                image: NetworkImage(authData!.url!),
-                              )),
+                            radius: AppDimensions.normalize(20),
+                            backgroundColor:
+                                AppTheme.c!.primary!.withAlpha(100),
+                            // child: FadeInImage(
+                            //   placeholder: const AssetImage(
+                            //     'assets/applogo.png',
+                            //   ),
+                            //   image: NetworkImage(authData!.url!),
+                            // )
+                          ),
                           Positioned(
                             right: 0.5,
                             bottom: 0.5,
@@ -150,9 +155,6 @@ class _ProfileState extends State<Profile> {
                                                   imageUrl =
                                                       await referenceImageToUpload
                                                           .getDownloadURL();
-
-                                                  print(
-                                                      "The Url Of the image is  $imageUrl");
                                                 } catch (error) {
                                                   throw Exception(
                                                     error.toString(),
@@ -217,7 +219,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       Space.y1!,
                       Text(
-                        authData.fullName,
+                        authData!.fullName,
                         style: AppText.h2,
                       ),
                       Text(
@@ -432,9 +434,7 @@ class _ProfileState extends State<Profile> {
       await docRef.update({
         'url': imageUrl,
       });
-      print('Image URL updated successfully');
     } catch (error) {
-      print('Error updating image URL: $error');
       rethrow;
     }
   }

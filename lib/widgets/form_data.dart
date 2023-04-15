@@ -9,7 +9,7 @@ class FormData {
   static Map<String, dynamic> initalValues() {
     if (kDebugMode) {
       return {
-        _FormKeys.email: 'driver@gmail.com',
+        _FormKeys.email: 'riderMe@gmail.com',
         _FormKeys.password: '123456',
       };
     }

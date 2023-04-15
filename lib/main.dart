@@ -4,11 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:riteway/app_routes.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
+import 'package:riteway/cubits/route_points/route_points_cubit.dart';
+import 'package:riteway/cubits/routes/routes_cubit.dart';
 import 'package:riteway/providers/image_picker_provider.dart';
 import 'package:riteway/screens/driver/driver.dart';
+import 'package:riteway/screens/driver/widgets/users_list.dart';
 import 'package:riteway/screens/login/login.dart';
 import 'package:riteway/screens/profile/profile.dart';
 import 'package:riteway/screens/rider/rider.dart';
+import 'package:riteway/screens/routes/routes_name.dart';
 import 'package:riteway/screens/signup/signup.dart';
 import 'package:riteway/screens/splash.dart';
 
@@ -30,7 +34,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         BlocProvider(create: (context) => AuthCubit()),
-        ChangeNotifierProvider(create: (context) => ImagePickerProvider())
+        BlocProvider(create: (context) => RoutesCubit()),
+        BlocProvider(create: (context) => RoutePointsCubit()),
+        ChangeNotifierProvider(create: (context) => ImagePickerProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -38,7 +44,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: AppRoutes.splash,
+        initialRoute: AppRoutes.login,
         routes: {
           AppRoutes.login: (context) => const Login(),
           AppRoutes.signup: (context) => const SignUp(),
@@ -46,6 +52,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.driver: (context) => const Driver(),
           AppRoutes.rider: (context) => const Rider(),
           AppRoutes.profile: (context) => const Profile(),
+          AppRoutes.routesNameScreen: (context) => const RoutesNameScreen(),
+          AppRoutes.usersList: (context) => const UsersList(),
         },
       ),
     );
