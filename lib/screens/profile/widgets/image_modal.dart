@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/profile/profile_cubit.dart';
+import 'package:riteway/models/profile.dart';
 import 'package:riteway/providers/image_picker_provider.dart';
 import 'package:riteway/widgets/app_button.dart';
 
@@ -136,8 +137,10 @@ class ImageModal extends StatelessWidget {
                     },
                   );
                 } else {
+                  final profile = ProfileModel();
                   profileCubit.add(
                     imgPicker.file!,
+                    profile,
                   );
                 }
               },

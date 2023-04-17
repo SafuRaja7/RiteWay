@@ -6,12 +6,10 @@ import 'package:riteway/app_routes.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
-import 'package:riteway/screens/driver/driver.dart';
-import 'package:riteway/screens/rider/rider.dart';
+import 'package:riteway/screens/home/home.dart';
 import 'package:riteway/widgets/app_button.dart';
 import 'package:riteway/widgets/custom_snackbar.dart';
 import 'package:riteway/widgets/custom_text_field.dart';
-import 'package:riteway/widgets/form_data.dart';
 import 'package:riteway/widgets/screen.dart';
 
 class Login extends StatefulWidget {
@@ -50,25 +48,15 @@ class _BodyState extends State<Login> {
               );
             } else if (authState is AuthLoginSuccess) {
               _formKey.currentState!.reset();
-              if (authCubit.state.data!.type == 'Driver') {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const Driver();
-                    },
-                  ),
-                );
-              } else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const Rider();
-                    },
-                  ),
-                );
-              }
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const Home();
+                  },
+                ),
+              );
             }
           },
         ),
@@ -78,7 +66,7 @@ class _BodyState extends State<Login> {
           padding: Space.all(1),
           child: FormBuilder(
             key: _formKey,
-            initialValue: FormData.initalValues(),
+            // initialValue: FormData.initalValues(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -114,9 +102,10 @@ class _BodyState extends State<Login> {
                     FormBuilderValidators.required(
                       errorText: 'Email is required',
                     ),
-                    FormBuilderValidators.email(
-                      errorText: 'Email format is invalid',
-                    ),
+                    FormBuilderValidators.match(
+                      r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
+                      errorText: 'Invalid email format (email@cust.pk)',
+                    )
                   ]),
                 ),
                 Space.y!,

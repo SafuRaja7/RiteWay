@@ -48,7 +48,6 @@ dependencies:
   url_launcher: ^6.1.9
   lottie: ^1.4.2
 
-  # firebase
   firebase_auth: ^4.1.5
   firebase_core: ^2.3.0
   cloud_firestore: ^4.1.0

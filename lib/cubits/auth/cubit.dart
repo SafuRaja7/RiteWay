@@ -48,7 +48,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> signup(String fullName, String email, String password,
-      String type, String age, String gender) async {
+      String type, String age, String gender,String? url, String? cnic,String? vehicleUrl) async {
     emit(const AuthSignUpLoading());
     try {
       final data = await AuthDataProvider.signUp(
@@ -58,6 +58,9 @@ class AuthCubit extends Cubit<AuthState> {
         type,
         age,
         gender,
+        cnic,
+        vehicleUrl,
+        url,
       );
 
       emit(AuthSignUpSuccess(data: data));

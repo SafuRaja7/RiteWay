@@ -1,9 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:riteway/app_routes.dart';
+
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
@@ -13,7 +15,9 @@ import 'package:riteway/widgets/app_button.dart';
 import 'package:riteway/widgets/custom_text_field.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+  const Profile({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -27,7 +31,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     final authCubit = AuthCubit.cubit(context);
-    final profileCubit = BlocProvider.of<ProfileCubit>(context);
+    final profileCubit = ProfileCubit.cubit(context);
     authCubit.fetch();
     profileCubit.fetch();
   }
@@ -39,16 +43,6 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -57,51 +51,36 @@ class _ProfileState extends State<Profile> {
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Profile',
                     style: AppText.h1b,
                   ),
+                  IconButton(
+                    onPressed: () {
+                      BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          if (state is AuthLogoutLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (state is AuthLogoutSuccess) {
+                            authCubit.logout();
+                          }
+                          return const Center(
+                            child: Text("Error occured"),
+                          );
+                        },
+                      );
+
+                      Navigator.pushReplacementNamed(context, AppRoutes.login);
+                    },
+                    icon: const Icon(Icons.logout),
+                  )
                 ],
               ),
               Space.y1!,
-              BlocBuilder<ProfileCubit, ProfileState>(
-                builder: (context, state) {
-                  if (state is ProfileLoading) {
-                    return const LinearProgressIndicator();
-                  } else if (state is ProfileSuccess) {
-                    return CircleAvatar(
-                      radius: AppDimensions.normalize(20),
-                      backgroundColor: AppTheme.c!.primary!.withAlpha(100),
-                      child: state.data!.url != '' && state.data != null
-                          ? CachedNetworkImage(
-                              imageUrl: state.data!.url!,
-                            )
-                          : Text(
-                              authCubit.state.data!.fullName!
-                                  .substring(0, 2)
-                                  .toUpperCase(),
-                              style: AppText.b1!.cl(
-                                Colors.black,
-                              ),
-                            ),
-                    );
-                  } else {
-                    return CircleAvatar(
-                      radius: AppDimensions.normalize(20),
-                      backgroundColor: AppTheme.c!.primary!.withAlpha(100),
-                      child: Text(
-                        authCubit.state.data!.fullName!
-                            .substring(0, 2)
-                            .toUpperCase(),
-                        style: AppText.b1!.cl(
-                          Colors.black,
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
               Space.y1!,
               AppButton(
                 width: AppDimensions.normalize(70),
@@ -163,108 +142,174 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                           Space.y1!,
-                          Row(
-                            children: [
-                              Text(
-                                'Email',
-                                style: AppText.b1b,
-                              ),
-                              Space.x1!,
-                              Expanded(
-                                child: CustomTextField(
-                                  initialValue: state.data!.email,
-                                  name: 'email',
-                                  hint: 'Email',
-                                  textInputType: TextInputType.text,
-                                  enabled: editProfile,
-                                  validatorFtn: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(
-                                      errorText: 'Email is required',
-                                    ),
-                                    FormBuilderValidators.email(
-                                      errorText: 'Email format is invalid',
-                                    ),
-                                  ]),
+                          if (state.data!.type == 'Driver' ||
+                              state.data!.type == 'Rider') ...[
+                            Row(
+                              children: [
+                                Text(
+                                  'Email',
+                                  style: AppText.b1b,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Space.y1!,
-                          Row(
-                            children: [
-                              Text(
-                                'Age   ',
-                                style: AppText.b1b,
-                              ),
-                              Space.x1!,
-                              Expanded(
-                                child: CustomTextField(
-                                  initialValue: state.data!.age,
-                                  name: 'age',
-                                  hint: 'Age',
-                                  textInputType: TextInputType.text,
-                                  enabled: editProfile,
-                                  validatorFtn: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(
-                                      errorText: 'Age is required',
+                                Space.x1!,
+                                Expanded(
+                                  child: CustomTextField(
+                                    initialValue: state.data!.email,
+                                    name: 'email',
+                                    hint: 'Email',
+                                    textInputType: TextInputType.text,
+                                    enabled: editProfile,
+                                    validatorFtn: FormBuilderValidators.compose(
+                                      [
+                                        FormBuilderValidators.required(
+                                          errorText: 'Email is required',
+                                        ),
+                                        FormBuilderValidators.match(
+                                          r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
+                                          errorText:
+                                              'Invalid email format (email@cust.pk)',
+                                        )
+                                      ],
                                     ),
-                                    FormBuilderValidators.numeric(
-                                      errorText:
-                                          'Only numeric values shoy=uld be accepted',
-                                    ),
-                                  ]),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Space.y1!,
-                          Row(
-                            children: [
-                              Text(
-                                'Gender',
-                                style: AppText.b1b,
-                              ),
-                              Space.x!,
-                              Expanded(
-                                child: CustomTextField(
-                                  initialValue: state.data!.gender,
-                                  name: 'gender',
-                                  hint: 'Gender',
-                                  textInputType: TextInputType.text,
-                                  enabled: editProfile,
-                                  validatorFtn: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(
-                                      errorText: 'Gender is required',
-                                    ),
-                                  ]),
+                              ],
+                            ),
+                            Space.y1!,
+                            Row(
+                              children: [
+                                Text(
+                                  'Age   ',
+                                  style: AppText.b1b,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Space.y1!,
-                          Row(
-                            children: [
-                              Text(
-                                'Type  ',
-                                style: AppText.b1b,
-                              ),
-                              Space.x1!,
-                              Expanded(
-                                child: CustomTextField(
-                                  initialValue: state.data!.type,
-                                  name: 'type',
-                                  hint: 'Type',
-                                  textInputType: TextInputType.text,
-                                  enabled: editProfile,
-                                  validatorFtn: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(
-                                      errorText: 'Type is required',
-                                    ),
-                                  ]),
+                                Space.x1!,
+                                Expanded(
+                                  child: CustomTextField(
+                                    initialValue: state.data!.age,
+                                    name: 'age',
+                                    hint: 'Age',
+                                    textInputType: TextInputType.text,
+                                    enabled: editProfile,
+                                    validatorFtn:
+                                        FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(
+                                        errorText: 'Age is required',
+                                      ),
+                                      FormBuilderValidators.numeric(
+                                        errorText:
+                                            'Only numeric values shoy=uld be accepted',
+                                      ),
+                                    ]),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                            Space.y1!,
+                            Row(
+                              children: [
+                                Text(
+                                  'Gender',
+                                  style: AppText.b1b,
+                                ),
+                                Space.x!,
+                                Expanded(
+                                  child: CustomTextField(
+                                    initialValue: state.data!.gender,
+                                    name: 'gender',
+                                    hint: 'Gender',
+                                    textInputType: TextInputType.text,
+                                    enabled: editProfile,
+                                    validatorFtn:
+                                        FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(
+                                        errorText: 'Gender is required',
+                                      ),
+                                    ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Space.y1!,
+                            Row(
+                              children: [
+                                Text(
+                                  'Type  ',
+                                  style: AppText.b1b,
+                                ),
+                                Space.x1!,
+                                Expanded(
+                                  child: CustomTextField(
+                                    initialValue: state.data!.type,
+                                    name: 'type',
+                                    hint: 'Type',
+                                    textInputType: TextInputType.text,
+                                    enabled: editProfile,
+                                    validatorFtn:
+                                        FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(
+                                        errorText: 'Type is required',
+                                      ),
+                                    ]),
+                                  ),
+                                ),
+                                Space.x1!,
+                              ],
+                            ),
+                          ],
+                          if (state.data!.type == 'Driver' &&
+                              state.data != null) ...[
+                            Space.y!,
+                            Row(
+                              children: [
+                                Text(
+                                  'Vehicle No',
+                                  style: AppText.b1b,
+                                ),
+                                Space.x1!,
+                                Expanded(
+                                  child: CustomTextField(
+                                    initialValue: state.data!.vehicleUrl,
+                                    name: 'vehicleNumber',
+                                    hint: 'Vehicle Number',
+                                    textInputType: TextInputType.text,
+                                    enabled: editProfile,
+                                    validatorFtn:
+                                        FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(
+                                        errorText: 'Vehicle Number is required',
+                                      ),
+                                    ]),
+                                  ),
+                                ),
+                                Space.x1!,
+                              ],
+                            ),
+                            Space.y!,
+                            Row(
+                              children: [
+                                Text(
+                                  'CNIC',
+                                  style: AppText.b1b,
+                                ),
+                                Space.x1!,
+                                Expanded(
+                                  child: CustomTextField(
+                                    initialValue: state.data!.cnic,
+                                    name: 'cnic',
+                                    hint: 'CNIC',
+                                    textInputType: TextInputType.text,
+                                    enabled: editProfile,
+                                    validatorFtn:
+                                        FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(
+                                        errorText: 'CNIC is required',
+                                      ),
+                                    ]),
+                                  ),
+                                ),
+                                Space.x1!,
+                              ],
+                            ),
+                          ],
                           Space.y1!,
                           AppButton(
                             child: Text(

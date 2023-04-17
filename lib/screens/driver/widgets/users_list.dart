@@ -13,8 +13,6 @@ class UsersList extends StatefulWidget {
 
 class _UsersListScreenState extends State<UsersList> {
   List<AuthData> authData = [];
-  static final firebaseFirestore = FirebaseFirestore.instance;
-  static final userCollection = firebaseFirestore.collection('users_prod');
   @override
   void initState() {
     super.initState();
@@ -28,7 +26,7 @@ class _UsersListScreenState extends State<UsersList> {
         authData = users;
       });
     } catch (e) {
-      print('Error: $e');
+      Text('Error: $e');
     }
   }
 
@@ -48,7 +46,6 @@ class _UsersListScreenState extends State<UsersList> {
   @override
   Widget build(BuildContext context) {
     App.init(context);
-    int count = 1;
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,

@@ -44,6 +44,9 @@ class AuthDataProvider {
     String type,
     String age,
     String gender,
+    String? cnic,
+    String? vehicleUrl,
+    String? url,
   ) async {
     try {
       User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -59,6 +62,9 @@ class AuthDataProvider {
         'type': type,
         'age': age,
         'gender': gender,
+        'url': url,
+        'cnic': cnic,
+        'vehicleUrl': vehicleUrl,
       });
 
       await user.updateDisplayName(fullName);
@@ -117,9 +123,8 @@ class AuthDataProvider {
     try {
       String link = '';
       if (file != null) {
-        Reference ref = FirebaseStorage.instance
-            .ref('/users_prod/${file.path.split('/').last}')
-            .child(file.path);
+        Reference ref =
+            FirebaseStorage.instance.ref('user_prod').child(file.path);
 
         await ref.putFile(File(file.path));
 
@@ -162,6 +167,4 @@ class AuthDataProvider {
       throw Exception(e.toString());
     }
   }
-
-  
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:riteway/app_routes.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
-import 'package:riteway/cubits/auth/cubit.dart';
 import 'package:riteway/widgets/app_button.dart';
 
 class Driver extends StatefulWidget {
@@ -16,38 +15,13 @@ class _DriverState extends State<Driver> {
   @override
   Widget build(BuildContext context) {
     App.init(context);
-    final authCubit = AuthCubit.cubit(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () {
-            authCubit.logout();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRoutes.login,
-              (Route<dynamic> route) => false,
-            );
-          },
-        ),
         centerTitle: true,
-        actions: [
-          InkWell(
-            onTap: () => Navigator.pushNamed(context, AppRoutes.profile),
-            child: const CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.grey,
-              child: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-            ),
-          )
-        ],
         title: Text(
           'Driver',
           style: AppText.b1!.cl(Colors.black),

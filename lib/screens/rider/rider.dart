@@ -22,19 +22,6 @@ class _RiderState extends State<Rider> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        actions: [
-          InkWell(
-            onTap: () => Navigator.pushNamed(context, AppRoutes.profile),
-            child: const CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.grey,
-              child: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-            ),
-          )
-        ],
         title: Text(
           'Rider',
           style: AppText.b1!.cl(Colors.black),

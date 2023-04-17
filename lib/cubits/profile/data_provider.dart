@@ -15,23 +15,30 @@ class ProfileDataProvider {
       final doc = await firebaseDocument
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-      if (doc.exists) {
-        final url = doc.data()!['url'];
-        final profile = ProfileModel(url: url);
-        return profile;
-      } else {
-        throw Exception("Document does not exist");
-      }
+
+      final url = doc.get('url') as String?;
+      final cnic = doc.get('cnic') as String?;
+      final vehicleNumber = doc.get('vehicleNumber') as String?;
+
+      return ProfileModel(
+        url: url,
+        cnic: cnic,
+        vehicleNumber: vehicleNumber,
+      );
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  static Future<ProfileModel> add(XFile? image) async {
+  static Future<ProfileModel> add(XFile? image, ProfileModel? prof) async {
     try {
-      String url = await uploadImage(image);
+      String url = await uploadImage(image!);
       await firebaseDocument.doc(FirebaseAuth.instance.currentUser!.uid).set(
-        {'url': url},
+        {
+          'url': url,
+          'cnic': prof!.cnic,
+          'vehicleNumber': prof.vehicleNumber,
+        },
       );
       ProfileModel profile = ProfileModel(url: url);
       return profile;
@@ -43,15 +50,15 @@ class ProfileDataProvider {
   static Future<String> uploadImage(XFile? file) async {
     try {
       String link = '';
+      String fileanme = DateTime.now().millisecondsSinceEpoch.toString();
       if (file != null) {
-        Reference ref = FirebaseStorage.instance
-            .ref('/profile/${file.path.split('/').last}')
-            .child(file.path);
+        Reference ref = FirebaseStorage.instance.ref();
+        Reference myRef = ref.child('profile');
+        Reference finalImg = myRef.child(fileanme);
 
-        await ref.putFile(File(file.path));
+        await finalImg.putFile(File(file.path));
 
-        String url = await ref.getDownloadURL();
-        link = url;
+        link = await finalImg.getDownloadURL();
       }
 
       return link;

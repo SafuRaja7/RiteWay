@@ -1,5 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/routes/routes_cubit.dart';
@@ -7,7 +9,11 @@ import 'package:riteway/screens/routes/route_points_screen.dart';
 import 'package:riteway/screens/routes/search_route_Screen.dart';
 
 class RoutesNameScreen extends StatefulWidget {
-  const RoutesNameScreen({super.key});
+  final bool? isNav;
+  const RoutesNameScreen({
+    Key? key,
+    this.isNav = false,
+  }) : super(key: key);
 
   @override
   State<RoutesNameScreen> createState() => _RoutesNameScreenState();
@@ -28,12 +34,19 @@ class _RoutesNameScreenState extends State<RoutesNameScreen> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Routes',
+          style: AppText.b1!.cl(Colors.black),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: !widget.isNav!
+            ? BackButton(
+                color: Colors.black,
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
       ),
       body: SafeArea(
         child: Column(
@@ -91,16 +104,22 @@ class _RoutesNameScreenState extends State<RoutesNameScreen> {
                             children: [
                               Space.y1!,
                               InkWell(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return RoutePointsScreen(
-                                        route: state.data![index],
-                                      );
-                                    },
-                                  ),
-                                ),
+                                onTap: () {
+                                  if (widget.isNav!) {
+                                    return;
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return RoutePointsScreen(
+                                            route: state.data![index],
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  }
+                                },
                                 child: ListTile(
                                   leading: Text(
                                     "${index + 1}",
