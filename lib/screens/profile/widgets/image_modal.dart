@@ -1,21 +1,30 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
+
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
+import 'package:riteway/cubits/auth/cubit.dart';
 import 'package:riteway/cubits/profile/profile_cubit.dart';
-import 'package:riteway/models/profile.dart';
 import 'package:riteway/providers/image_picker_provider.dart';
 import 'package:riteway/widgets/app_button.dart';
 
 class ImageModal extends StatelessWidget {
-  const ImageModal({super.key});
+  final bool license;
+  const ImageModal({
+    Key? key,
+    required this.license,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final profileCubit = BlocProvider.of<ProfileCubit>(context);
+    final authCubit = AuthCubit.cubit(context);
     App.init(context);
     final imgPicker = Provider.of<ImagePickerProvider>(context);
 
@@ -112,7 +121,7 @@ class ImageModal extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (imgPicker.file == null) {
                   return showDialog(
                     context: context,
@@ -137,11 +146,49 @@ class ImageModal extends StatelessWidget {
                     },
                   );
                 } else {
-                  final profile = ProfileModel();
-                  profileCubit.add(
-                    imgPicker.file!,
-                    profile,
+                  final authData = authCubit.state.data;
+                  final documentReference = FirebaseFirestore.instance
+                      .collection('users_prod')
+                      .doc(authData!.id);
+
+                  final storageRef = FirebaseStorage.instance
+                      .ref()
+                      .child('auth/${path.basename(imgPicker.file!.path)}');
+                  final uploadTask =
+                      storageRef.putFile(File(imgPicker.file!.path));
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              CircularProgressIndicator(),
+                              SizedBox(width: 20),
+                              Text("Uploading image..."),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
+
+                  final snapshot = await uploadTask.whenComplete(() {});
+
+                  final downloadURL = await snapshot.ref.getDownloadURL();
+
+                  !license
+                      ? documentReference.update({'url': downloadURL})
+                      : documentReference.update({'licenseUrl': downloadURL});
+
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
                 }
               },
             ),

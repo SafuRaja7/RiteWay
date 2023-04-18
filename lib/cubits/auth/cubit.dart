@@ -26,8 +26,6 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> fetch() async {
     emit(const AuthFetchLoading());
     try {
-
-      
       final data = await AuthDataProvider.fetch();
 
       emit(AuthFetchSuccess(data: data));
@@ -47,21 +45,22 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signup(String fullName, String email, String password,
-      String type, String age, String gender,String? url, String? cnic,String? vehicleUrl) async {
+  Future<void> signup(
+    String fullName,
+    String email,
+    String password,
+    String type,
+    String age,
+    String gender,
+    String? url,
+    String? cnic,
+    String? vehicleNumber,
+    String? licenseUrl,
+  ) async {
     emit(const AuthSignUpLoading());
     try {
-      final data = await AuthDataProvider.signUp(
-        fullName,
-        email,
-        password,
-        type,
-        age,
-        gender,
-        cnic,
-        vehicleUrl,
-        url,
-      );
+      final data = await AuthDataProvider.signUp(fullName, email, password,
+          type, age, gender, cnic, vehicleNumber, url, licenseUrl);
 
       emit(AuthSignUpSuccess(data: data));
     } catch (e) {

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,22 +82,6 @@ class _ProfileState extends State<Profile> {
                 ],
               ),
               Space.y1!,
-              Space.y1!,
-              AppButton(
-                width: AppDimensions.normalize(70),
-                child: const Text('Edit Image'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const ImageModal();
-                      },
-                    ),
-                  );
-                },
-              ),
-              Space.y1!,
               FormBuilder(
                 key: _formKey,
                 child: BlocBuilder<AuthCubit, AuthState>(
@@ -107,6 +92,34 @@ class _ProfileState extends State<Profile> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          CircleAvatar(
+                            radius: AppDimensions.normalize(20),
+                            child: state.data!.url != null &&
+                                    state.data!.url!.isNotEmpty
+                                ? CachedNetworkImage(imageUrl: state.data!.url!)
+                                : Text(
+                                    state.data!.fullName!.substring(0, 2)
+                                      ..toString().toUpperCase(),
+                                  ),
+                          ),
+                          Space.y!,
+                          AppButton(
+                            width: AppDimensions.normalize(70),
+                            child: const Text('Edit Image'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return const ImageModal(
+                                      license: false,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          Space.y1!,
                           Text(
                             state.data!.fullName!,
                             style: AppText.h2,
@@ -267,17 +280,15 @@ class _ProfileState extends State<Profile> {
                                 Space.x1!,
                                 Expanded(
                                   child: CustomTextField(
-                                    initialValue: state.data!.vehicleUrl,
+                                    initialValue: state.data!.vehicleNumber,
                                     name: 'vehicleNumber',
                                     hint: 'Vehicle Number',
                                     textInputType: TextInputType.text,
                                     enabled: editProfile,
                                     validatorFtn:
-                                        FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(
-                                        errorText: 'Vehicle Number is required',
-                                      ),
-                                    ]),
+                                        FormBuilderValidators.required(
+                                      errorText: 'Vehicle Number is required',
+                                    ),
                                   ),
                                 ),
                                 Space.x1!,
@@ -304,6 +315,34 @@ class _ProfileState extends State<Profile> {
                                         errorText: 'CNIC is required',
                                       ),
                                     ]),
+                                  ),
+                                ),
+                                Space.x1!,
+                              ],
+                            ),
+                            Space.y!,
+                            Row(
+                              children: [
+                                Text(
+                                  'License',
+                                  style: AppText.b1b,
+                                ),
+                                Space.x1!,
+                                Expanded(
+                                  child: AppButton(
+                                    child: const Text('Upload Image'),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return const ImageModal(
+                                              license: true,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 Space.x1!,

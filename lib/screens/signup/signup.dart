@@ -215,26 +215,13 @@ class _BodyState extends State<SignUp> {
                   ),
                   Space.y!,
                   CustomTextField(
-                    name: 'vehicle URL',
-                    hint: 'Vehicle URl',
+                    name: 'vehicle',
+                    hint: 'Vehicle Number',
                     textInputType: TextInputType.text,
                     validatorFtn: FormBuilderValidators.compose(
                       [
                         FormBuilderValidators.required(
-                          errorText: 'Age is required',
-                        ),
-                      ],
-                    ),
-                  ),
-                  Space.y!,
-                  CustomTextField(
-                    name: 'url',
-                    hint: 'URL',
-                    textInputType: TextInputType.text,
-                    validatorFtn: FormBuilderValidators.compose(
-                      [
-                        FormBuilderValidators.required(
-                          errorText: 'Age is required',
+                          errorText: 'Vehicle Number is required',
                         ),
                       ],
                     ),
@@ -319,15 +306,17 @@ class _BodyState extends State<SignUp> {
                       );
                     } else if (driver == true) {
                       authCubit.signup(
-                          data['fullName'],
-                          data['email'],
-                          password,
-                          data['type'],
-                          data['age'],
-                          data['cnic'],
-                          data['vehicleUrl'],
-                          data['url'],
-                          data['gender']);
+                        data['fullName'],
+                        data['email'],
+                        password,
+                        data['type'],
+                        data['age'],
+                        data['gender'],
+                        '',
+                        data['cnic'],
+                        data['vehicle'],
+                        '',
+                      );
                     } else if (driver == false) {
                       authCubit.signup(
                         data['fullName'],
@@ -336,6 +325,7 @@ class _BodyState extends State<SignUp> {
                         data['type'],
                         data['age'],
                         data['gender'],
+                        '',
                         '',
                         '',
                         '',
