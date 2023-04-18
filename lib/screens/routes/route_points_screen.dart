@@ -46,10 +46,7 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
         elevation: 0,
         leading: BackButton(
           color: Colors.black,
-          onPressed: () async {
-            await routeCubit.fetch();
-            setState(() {});
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SafeArea(
@@ -181,6 +178,7 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
                         ),
                         onPressed: () => Navigator.pop(context),
                       ),
+                      Space.y2!,
                     ],
                   )
                 : Column(
