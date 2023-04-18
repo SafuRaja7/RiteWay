@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:riteway/app_routes.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
 import 'package:riteway/cubits/profile/profile_cubit.dart';
-import 'package:riteway/cubits/route_points/route_points_cubit.dart';
 import 'package:riteway/cubits/routes/routes_cubit.dart';
 import 'package:riteway/providers/image_picker_provider.dart';
 import 'package:riteway/screens/driver/driver.dart';
@@ -36,7 +35,6 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => RoutesCubit()),
-        BlocProvider(create: (context) => RoutePointsCubit()),
         BlocProvider(create: (context) => ProfileCubit()),
         ChangeNotifierProvider(create: (context) => ImagePickerProvider()),
       ],

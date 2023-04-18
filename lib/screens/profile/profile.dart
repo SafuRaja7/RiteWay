@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
 import 'package:riteway/app_routes.dart';
 
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
 import 'package:riteway/cubits/profile/profile_cubit.dart';
+import 'package:riteway/providers/image_picker_provider.dart';
 import 'package:riteway/screens/profile/widgets/image_modal.dart';
 import 'package:riteway/widgets/app_button.dart';
 import 'package:riteway/widgets/custom_text_field.dart';
@@ -25,6 +27,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String imgUrl = '';
   final _formKey = GlobalKey<FormBuilderState>();
   bool editProfile = false;
 
@@ -41,6 +44,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     App.init(context);
     final authCubit = AuthCubit.cubit(context, true);
+    final imgPicker = Provider.of<ImagePickerProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -92,31 +96,47 @@ class _ProfileState extends State<Profile> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CircleAvatar(
-                            radius: AppDimensions.normalize(20),
-                            child: state.data!.url != null &&
-                                    state.data!.url!.isNotEmpty
-                                ? CachedNetworkImage(imageUrl: state.data!.url!)
-                                : Text(
-                                    state.data!.fullName!.substring(0, 2)
-                                      ..toString().toUpperCase(),
-                                  ),
+                          SizedBox(
+                            width: AppDimensions.normalize(50),
+                            height: AppDimensions.normalize(50),
+                            child: Material(
+                              shape: const CircleBorder(),
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: InkWell(
+                                splashColor: Colors.black26,
+                                onTap: () {},
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  height: AppDimensions.normalize(50),
+                                  imageUrl: state.data!.url!,
+                                ),
+                              ),
+                            ),
                           ),
                           Space.y!,
                           AppButton(
                             width: AppDimensions.normalize(70),
-                            child: const Text('Edit Image'),
+                            child: Row(
+                              children: [
+                                Space.x2!,
+                                const Icon(Icons.upload),
+                                const Text('Upload Image'),
+                              ],
+                            ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return const ImageModal(
-                                      license: false,
-                                    );
-                                  },
-                                ),
-                              );
+                              setState(() {
+                                imgPicker.reset();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return const ImageModal(
+                                        license: false,
+                                      );
+                                    },
+                                  ),
+                                );
+                              });
                             },
                           ),
                           Space.y1!,
@@ -308,7 +328,7 @@ class _ProfileState extends State<Profile> {
                                     name: 'cnic',
                                     hint: 'CNIC',
                                     textInputType: TextInputType.text,
-                                    enabled: editProfile,
+                                    enabled: false,
                                     validatorFtn:
                                         FormBuilderValidators.compose([
                                       FormBuilderValidators.required(
@@ -342,6 +362,7 @@ class _ProfileState extends State<Profile> {
                                           },
                                         ),
                                       );
+                                      imgPicker.reset();
                                     },
                                   ),
                                 ),
@@ -352,7 +373,7 @@ class _ProfileState extends State<Profile> {
                           Space.y1!,
                           AppButton(
                             child: Text(
-                              editProfile ? 'Save' : 'Edit Profile',
+                              editProfile ? 'Save' : 'Click to Edit',
                             ),
                             onPressed: () {
                               setState(

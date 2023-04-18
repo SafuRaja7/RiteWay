@@ -79,7 +79,7 @@ class BottomSheet extends StatelessWidget {
           AppButton(
             width: AppDimensions.normalize(100),
             child: Text(
-              'View Users',
+              'View Students',
               style: AppText.l1b!.cl(Colors.white),
             ),
             onPressed: () {

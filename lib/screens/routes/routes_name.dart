@@ -30,6 +30,8 @@ class _RoutesNameScreenState extends State<RoutesNameScreen> {
   @override
   Widget build(BuildContext context) {
     App.init(context);
+    final routeCubit = BlocProvider.of<RoutesCubit>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -41,12 +43,10 @@ class _RoutesNameScreenState extends State<RoutesNameScreen> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: !widget.isNav!
-            ? BackButton(
-                color: Colors.black,
-                onPressed: () => Navigator.pop(context),
-              )
-            : null,
+        leading: BackButton(
+          color: Colors.black,
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -95,47 +95,47 @@ class _RoutesNameScreenState extends State<RoutesNameScreen> {
                 if (state is RoutesSuccess) {
                   return Column(
                     children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: state.data!.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Space.y1!,
-                              InkWell(
-                                onTap: () {
-                                  if (widget.isNav!) {
-                                    return;
-                                  } else {
+                      RefreshIndicator(
+                        onRefresh: () => routeCubit.fetch(),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: state.data!.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Space.y1!,
+                                InkWell(
+                                  onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return RoutePointsScreen(
+                                            isNav: widget.isNav!,
                                             route: state.data![index],
                                           );
                                         },
                                       ),
                                     );
-                                  }
-                                },
-                                child: ListTile(
-                                  leading: Text(
-                                    "${index + 1}",
-                                  ),
-                                  title: Text(
-                                    state.data![index].name!,
-                                    style: AppText.b1!,
+                                  },
+                                  child: ListTile(
+                                    leading: Text(
+                                      "${index + 1}",
+                                    ),
+                                    title: Text(
+                                      state.data![index].name!,
+                                      style: AppText.b1!,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const Divider(
-                                thickness: 2,
-                              ),
-                            ],
-                          );
-                        },
+                                const Divider(
+                                  thickness: 2,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ],
                   );

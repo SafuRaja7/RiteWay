@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.room_outlined),
             label: 'Routes',
           ),
           BottomNavigationBarItem(

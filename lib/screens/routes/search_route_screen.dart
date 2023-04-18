@@ -118,6 +118,7 @@ class _SearchRouteScreenState extends State<SearchRouteScreen> {
                                     builder: (context) {
                                       return RoutePointsScreen(
                                         route: e,
+                                        isNav: false,
                                       );
                                     },
                                   ),

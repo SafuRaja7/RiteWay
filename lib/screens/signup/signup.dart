@@ -145,6 +145,11 @@ class _BodyState extends State<SignUp> {
                     FormBuilderValidators.required(
                       errorText: 'Password is required',
                     ),
+                    FormBuilderValidators.match(
+                      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#])[A-Za-z\d@#]+$',
+                      errorText:
+                          'Please enter an uppercase,lowercase,number and special character',
+                    ),
                     FormBuilderValidators.min(
                       6,
                       errorText: 'Password cannot be less than 6 characters',
@@ -161,6 +166,10 @@ class _BodyState extends State<SignUp> {
                     FormBuilderValidators.required(
                       errorText: 'Confirm password is required',
                     ),
+                    FormBuilderValidators.match(
+                      '^[A-Za-z0-9@#]+',
+                      errorText: 'Invalid email format (email@cust.pk)',
+                    ),
                   ]),
                 ),
                 Space.y!,
@@ -173,10 +182,14 @@ class _BodyState extends State<SignUp> {
                       FormBuilderValidators.required(
                         errorText: 'Email is required',
                       ),
-                      FormBuilderValidators.match(
-                        r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
-                        errorText: 'Invalid email format (email@cust.pk)',
-                      )
+                      driver
+                          ? FormBuilderValidators.email(
+                              errorText: 'Please provide valid email',
+                            )
+                          : FormBuilderValidators.match(
+                              r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
+                              errorText: 'Invalid email format (email@cust.pk)',
+                            )
                     ],
                   ),
                 ),
@@ -200,7 +213,7 @@ class _BodyState extends State<SignUp> {
                 if (driver == true) ...[
                   CustomTextField(
                     name: 'cnic',
-                    hint: 'CNIC',
+                    hint: 'CNIC (without dashes)',
                     textInputType: TextInputType.number,
                     validatorFtn: FormBuilderValidators.compose(
                       [
@@ -210,6 +223,10 @@ class _BodyState extends State<SignUp> {
                         FormBuilderValidators.numeric(
                           errorText: 'Please add a CNIC number',
                         ),
+                        FormBuilderValidators.maxLength(13,
+                            errorText: 'Please provide a valid CNIC'),
+                        FormBuilderValidators.minLength(13,
+                            errorText: 'Please provide a valid CNIC'),
                       ],
                     ),
                   ),

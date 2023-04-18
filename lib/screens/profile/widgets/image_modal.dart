@@ -15,13 +15,18 @@ import 'package:riteway/cubits/profile/profile_cubit.dart';
 import 'package:riteway/providers/image_picker_provider.dart';
 import 'package:riteway/widgets/app_button.dart';
 
-class ImageModal extends StatelessWidget {
+class ImageModal extends StatefulWidget {
   final bool license;
   const ImageModal({
     Key? key,
     required this.license,
   }) : super(key: key);
 
+  @override
+  State<ImageModal> createState() => _ImageModalState();
+}
+
+class _ImageModalState extends State<ImageModal> {
   @override
   Widget build(BuildContext context) {
     final authCubit = AuthCubit.cubit(context);
@@ -181,7 +186,7 @@ class ImageModal extends StatelessWidget {
 
                   final downloadURL = await snapshot.ref.getDownloadURL();
 
-                  !license
+                  !widget.license
                       ? documentReference.update({'url': downloadURL})
                       : documentReference.update({'licenseUrl': downloadURL});
 
