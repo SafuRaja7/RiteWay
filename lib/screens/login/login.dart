@@ -25,7 +25,7 @@ class _BodyState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     App.init(context);
-    final authCubit = AuthCubit.cubit(context);
+    final authCubit = AuthCubit.cubit(context, true);
 
     return Screen(
       overlayWidgets: [

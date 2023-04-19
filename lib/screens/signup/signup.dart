@@ -182,14 +182,10 @@ class _BodyState extends State<SignUp> {
                       FormBuilderValidators.required(
                         errorText: 'Email is required',
                       ),
-                      driver
-                          ? FormBuilderValidators.email(
-                              errorText: 'Please provide valid email',
-                            )
-                          : FormBuilderValidators.match(
-                              r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
-                              errorText: 'Invalid email format (email@cust.pk)',
-                            )
+                      FormBuilderValidators.match(
+                        r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
+                        errorText: 'Invalid email format (email@cust.pk)',
+                      )
                     ],
                   ),
                 ),

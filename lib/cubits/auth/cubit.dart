@@ -26,9 +26,13 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> fetch() async {
     emit(const AuthFetchLoading());
     try {
-      final data = await AuthDataProvider.fetch();
-
-      emit(AuthFetchSuccess(data: data));
+      repo.fetch().listen(
+        (event) {
+          Map<String, dynamic>? data = event.data()!;
+          final authData = AuthData.fromMap(data);
+          emit(AuthFetchSuccess(data: authData));
+        },
+      );
     } catch (e) {
       emit(AuthFetchFailed(message: e.toString()));
     }

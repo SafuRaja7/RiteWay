@@ -43,10 +43,12 @@ class _RoutesNameScreenState extends State<RoutesNameScreen> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: !widget.isNav!
+            ? BackButton(
+                color: Colors.black,
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
       ),
       body: SafeArea(
         child: Column(

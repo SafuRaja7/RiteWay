@@ -25,16 +25,6 @@ class RoutePointsScreen extends StatefulWidget {
 }
 
 class _RoutePointsScreenState extends State<RoutePointsScreen> {
-  bool refreshing = false;
-  @override
-  void initState() {
-    final routeCubit = BlocProvider.of<RoutesCubit>(context);
-    super.initState();
-    routeCubit.fetch();
-  }
-
-  final ScrollController scrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     App.init(context);
@@ -48,165 +38,168 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
           color: Colors.black,
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await routeCubit.fetch();
+              setState(() {});
+            },
+            icon: const Icon(
+              Icons.refresh,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await routeCubit.fetch();
-            setState(() {
-              routeCubit.fetch();
-            });
-          },
-          child: SingleChildScrollView(
-            child: !widget.isNav
-                ? Column(
-                    children: [
-                      Space.y1!,
-                      Center(
-                        child: Text(
-                          'Processing your request',
-                          style: AppText.h3,
+        child: SingleChildScrollView(
+          child: !widget.isNav
+              ? Column(
+                  children: [
+                    Space.y1!,
+                    Center(
+                      child: Text(
+                        'Processing your request',
+                        style: AppText.h3,
+                      ),
+                    ),
+                    Space.y2!,
+                    Lottie.asset(
+                      'assets/loading.json',
+                      height: AppDimensions.normalize(50),
+                    ),
+                    Space.y2!,
+                    Container(
+                      width: AppDimensions.normalize(120),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        border: Border.all(
+                          width: 1,
+                          color: Colors.black54,
                         ),
                       ),
-                      Space.y2!,
-                      Lottie.asset(
-                        'assets/loading.json',
-                        height: AppDimensions.normalize(50),
-                      ),
-                      Space.y2!,
-                      Container(
-                        width: AppDimensions.normalize(120),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white,
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.black54,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Space.y!,
+                          Text(
+                            'Capital University of Science\nand technology',
+                            style: AppText.b2,
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Space.y!,
-                            Text(
-                              'Capital University of Science\nand technology',
-                              style: AppText.b2,
-                              textAlign: TextAlign.center,
-                            ),
-                            Space.y!,
-                          ],
-                        ),
+                          Space.y!,
+                        ],
                       ),
-                      Space.y!,
-                      BlocBuilder<RoutesCubit, RoutesState>(
-                        builder: (context, state) {
-                          if (state is RoutesLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (state is RoutesSuccess) {
-                            return Column(
-                              children: [
-                                ...List.generate(
-                                  widget.route.routePoints!.length,
-                                  (index) => Column(
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_downward,
-                                        size: AppDimensions.normalize(10),
-                                      ),
-                                      Container(
-                                        width: AppDimensions.normalize(120),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          color: Colors.white,
-                                          border: Border.all(
-                                            width: 1,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Space.y!,
-                                            Text(
-                                              widget.route.routePoints![index]
-                                                  .name!,
-                                              style: AppText.b2,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            Space.y!,
-                                          ],
-                                        ),
-                                      ),
-                                      Space.y!,
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
+                    ),
+                    Space.y!,
+                    BlocBuilder<RoutesCubit, RoutesState>(
+                      builder: (context, state) {
+                        if (state is RoutesLoading) {
                           return const Center(
-                            child: Text('No data found'),
+                            child: CircularProgressIndicator(),
                           );
-                        },
+                        } else if (state is RoutesSuccess) {
+                          return Column(
+                            children: [
+                              ...List.generate(
+                                widget.route.routePoints!.length,
+                                (index) => Column(
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_downward,
+                                      size: AppDimensions.normalize(10),
+                                    ),
+                                    Container(
+                                      width: AppDimensions.normalize(120),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          width: 1,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Space.y!,
+                                          Text(
+                                            widget.route.routePoints![index]
+                                                .name!,
+                                            style: AppText.b2,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          Space.y!,
+                                        ],
+                                      ),
+                                    ),
+                                    Space.y!,
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const Center(
+                          child: Text('No data found'),
+                        );
+                      },
+                    ),
+                    Space.y1!,
+                    AppButton(
+                      width: AppDimensions.normalize(80),
+                      child: Text(
+                        'Confirm Ride',
+                        style: AppText.l1!.cl(Colors.white),
                       ),
-                      Space.y1!,
-                      AppButton(
-                        width: AppDimensions.normalize(80),
-                        child: Text(
-                          'Confirm Ride',
-                          style: AppText.l1!.cl(Colors.white),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const ConfirmRideScreen();
+                          },
                         ),
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const ConfirmRideScreen();
-                            },
+                      ),
+                    ),
+                    Space.y!,
+                    AppButton(
+                      width: AppDimensions.normalize(80),
+                      child: Text(
+                        'Cancel',
+                        style: AppText.l1!.cl(Colors.white),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Space.y2!,
+                  ],
+                )
+              : Column(
+                  children: [
+                    ...List.generate(
+                      widget.route.routePoints!.length,
+                      (index) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Space.y1!,
+                          ListTile(
+                            leading: Text(
+                              "${index + 1}",
+                            ),
+                            title: Text(
+                              widget.route.routePoints![index].name!,
+                              style: AppText.b1!,
+                            ),
                           ),
-                        ),
+                          const Divider(
+                            thickness: 2,
+                          ),
+                        ],
                       ),
-                      Space.y!,
-                      AppButton(
-                        width: AppDimensions.normalize(80),
-                        child: Text(
-                          'Cancel',
-                          style: AppText.l1!.cl(Colors.white),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      Space.y2!,
-                    ],
-                  )
-                : Column(
-                    children: [
-                      ...List.generate(
-                        widget.route.routePoints!.length,
-                        (index) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Space.y1!,
-                            ListTile(
-                              leading: Text(
-                                "${index + 1}",
-                              ),
-                              title: Text(
-                                widget.route.routePoints![index].name!,
-                                style: AppText.b1!,
-                              ),
-                            ),
-                            const Divider(
-                              thickness: 2,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-          ),
+                    )
+                  ],
+                ),
         ),
       ),
     );

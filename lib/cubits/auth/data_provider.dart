@@ -4,18 +4,14 @@ class AuthDataProvider {
   static final firebaseFirestore = FirebaseFirestore.instance;
   static final userCollection = firebaseFirestore.collection('users_prod');
 
-  static Future<AuthData> fetch() async {
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> fetch() {
     try {
-      final data = await userCollection
+      return userCollection
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get();
-
-      final Map<String, dynamic>? raw = data.data();
-      final authData = AuthData.fromMap(raw!);
-
-      return authData;
+          .snapshots()
+          .asBroadcastStream();
     } catch (e) {
-      throw Exception(e.toString());
+      throw Exception("Internal Server Error");
     }
   }
 
