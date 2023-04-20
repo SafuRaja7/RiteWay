@@ -1,6 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:riteway/configs/configs.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -10,6 +12,7 @@ class CustomTextField extends StatefulWidget {
   final bool? enabled;
   final double? width;
   final bool isMessage;
+  final int? maxLength;
 
   final bool? autoFocus;
   final FocusNode? node;
@@ -27,23 +30,24 @@ class CustomTextField extends StatefulWidget {
 
   const CustomTextField({
     Key? key,
-    this.node,
-    this.enabled,
-    this.errorText,
-    this.autoFocus,
-    this.isMessage = false,
-    this.prefixIcon,
-    this.onChangeFtn,
-    this.initialValue,
-    this.validatorFtn,
     required this.name,
     required this.hint,
     this.isPass = false,
-    this.textCapitalization = TextCapitalization.none,
-    this.isSuffixIcon = false,
-    required this.textInputType,
+    this.enabled,
     this.width = double.infinity,
+    this.isMessage = false,
+    this.maxLength,
+    this.autoFocus,
+    this.node,
+    this.prefixIcon,
+    this.isSuffixIcon = false,
+    this.initialValue,
+    required this.textInputType,
     this.textInputAction = TextInputAction.done,
+    this.textCapitalization = TextCapitalization.none,
+    this.errorText,
+    this.validatorFtn,
+    this.onChangeFtn,
   }) : super(key: key);
 
   @override
@@ -63,6 +67,7 @@ class CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
+      maxLength: widget.maxLength,
       minLines: widget.isMessage ? 5 : 1,
       maxLines: widget.isMessage ? 8 : 1,
       textCapitalization: widget.textCapitalization,

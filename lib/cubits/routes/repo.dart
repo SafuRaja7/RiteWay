@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riteway/cubits/routes/data_provider.dart';
-import 'package:riteway/models/routes.dart';
 
 class RoutesRepo {
-  Future<List<Routes>> fetch() => RoutesDataProvider.fetch();
+  Stream<QuerySnapshot<Map<String, dynamic>>> fetch() =>
+      RoutesDataProvider.fetch();
 }

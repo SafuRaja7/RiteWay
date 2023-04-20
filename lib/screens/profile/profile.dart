@@ -96,23 +96,36 @@ class _ProfileState extends State<Profile> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: AppDimensions.normalize(50),
-                            height: AppDimensions.normalize(50),
-                            child: Material(
-                              shape: const CircleBorder(),
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              child: InkWell(
-                                splashColor: Colors.black26,
-                                onTap: () {},
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.cover,
+                          state.data!.url != null && state.data!.url!.isNotEmpty
+                              ? SizedBox(
+                                  width: AppDimensions.normalize(50),
                                   height: AppDimensions.normalize(50),
-                                  imageUrl: state.data!.url!,
+                                  child: Material(
+                                    shape: const CircleBorder(),
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.contain,
+                                      height: AppDimensions.normalize(50),
+                                      imageUrl: state.data!.url!,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  width: AppDimensions.normalize(50),
+                                  height: AppDimensions.normalize(50),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppTheme.c!.primary!.withAlpha(200),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      state.data!.fullName!
+                                          .substring(0, 2)
+                                          .toUpperCase(),
+                                      style: AppText.b1!.cl(Colors.black),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
                           Space.y!,
                           AppButton(
                             width: AppDimensions.normalize(70),

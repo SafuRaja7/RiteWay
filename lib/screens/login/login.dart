@@ -81,11 +81,11 @@ class _BodyState extends State<Login> {
                   ),
                 ),
                 Space.y!,
-                Text(
-                  'Welcome to\nRiteWay',
-                  style: AppText.h1b,
-                ),
-                Space.y!,
+                // Text(
+                //   'Welcome to\nRiteWay',
+                //   style: AppText.h1b,
+                // ),
+                // Space.y!,
                 Text(
                   'Please log in to your account',
                   style: AppText.b2!.copyWith(
@@ -102,10 +102,9 @@ class _BodyState extends State<Login> {
                     FormBuilderValidators.required(
                       errorText: 'Email is required',
                     ),
-                    FormBuilderValidators.match(
-                      r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
-                      errorText: 'Invalid email format (email@cust.pk)',
-                    )
+                    FormBuilderValidators.email(
+                      errorText: 'Provide a valid email',
+                    ),
                   ]),
                 ),
                 Space.y!,

@@ -16,9 +16,17 @@ class RoutesCubit extends Cubit<RoutesState> {
   Future<void> fetch() async {
     emit(const RoutesLoading());
     try {
-      final data = await repo.fetch();
-      emit(
-        RoutesSuccess(data),
+      repo.fetch().listen(
+        (event) {
+          repo.fetch().listen((event) {
+            final data =
+                event.docs.map((e) => Routes.fromMap(e.data())).toList();
+
+            emit(
+              RoutesSuccess(data),
+            );
+          });
+        },
       );
     } catch (e) {
       emit(

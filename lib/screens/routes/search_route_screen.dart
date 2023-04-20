@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/routes/routes_cubit.dart';
+import 'package:riteway/models/routes.dart';
 import 'package:riteway/screens/routes/route_points_screen.dart';
 import 'package:riteway/screens/routes/searched_route_card.dart';
 import 'package:riteway/widgets/custom_text_field.dart';
@@ -18,23 +19,21 @@ class SearchRouteScreen extends StatefulWidget {
 
 class _SearchRouteScreenState extends State<SearchRouteScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
-  List searchedRoutes = [];
-  List routes = [];
+  List<Routes> searchedRoutes = [];
+  List<Routes> routes = [];
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        final routeCubit = BlocProvider.of<RoutesCubit>(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final routeCubit = BlocProvider.of<RoutesCubit>(context);
 
-        routes = List.from(routes)
-          ..addAll(
-            routeCubit.state.data!,
-          );
-      },
-    );
+      routes = List.from(routes)
+        ..addAll(
+          routeCubit.state.data!,
+        );
+    });
   }
 
   @override
@@ -77,26 +76,43 @@ class _SearchRouteScreenState extends State<SearchRouteScreen> {
                     }
 
                     if (value.isNotEmpty) {
-                      setState(() {
-                        var lowerCaseQuery = value.toLowerCase();
+                      setState(
+                        () {
+                          var lowerCaseQuery = value.toLowerCase();
 
-                        searchedRoutes = routes.where((prop) {
-                          final charityName = prop!.name!
-                              .toLowerCase()
-                              .contains(lowerCaseQuery);
-                          return charityName;
-                        }).toList(growable: false)
-                          ..sort(
-                            (a, b) => a!.name!
-                                .toLowerCase()
-                                .indexOf(lowerCaseQuery)
-                                .compareTo(
-                                  b!.name!
+                          searchedRoutes = routes.where(
+                            (prop) {
+                              final charityName = prop.name!
+                                  .toLowerCase()
+                                  .contains(lowerCaseQuery);
+
+                              final routepoints = prop.routePoints!.any(
+                                (prop) {
+                                  if (prop.name!
                                       .toLowerCase()
-                                      .indexOf(lowerCaseQuery),
-                                ),
-                          );
-                      });
+                                      .contains(lowerCaseQuery)) {
+                                    return true;
+                                  } else {
+                                    return false;
+                                  }
+                                },
+                              );
+
+                              return charityName || routepoints;
+                            },
+                          ).toList(growable: false)
+                            ..sort(
+                              (a, b) => a.name!
+                                  .toLowerCase()
+                                  .indexOf(lowerCaseQuery)
+                                  .compareTo(
+                                    b.name!
+                                        .toLowerCase()
+                                        .indexOf(lowerCaseQuery),
+                                  ),
+                            );
+                        },
+                      );
                     }
 
                     return null;
@@ -107,6 +123,8 @@ class _SearchRouteScreenState extends State<SearchRouteScreen> {
                 child: SingleChildScrollView(
                   child: Wrap(
                     children: searchedRoutes
+                        .asMap()
+                        .entries
                         .map(
                           (e) => Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -116,14 +134,16 @@ class _SearchRouteScreenState extends State<SearchRouteScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
+                                      print(e.key);
                                       return RoutePointsScreen(
-                                        route: e,
+                                        index: e.key,
                                         isNav: false,
+                                        id: e.value.createdAt!,
                                       );
                                     },
                                   ),
                                 ),
-                                child: SearchedRouteCard(route: e),
+                                child: SearchedRouteCard(route: e.value),
                               ),
                               const Divider(),
                               Space.y!,

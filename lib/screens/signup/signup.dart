@@ -182,10 +182,14 @@ class _BodyState extends State<SignUp> {
                       FormBuilderValidators.required(
                         errorText: 'Email is required',
                       ),
-                      FormBuilderValidators.match(
-                        r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
-                        errorText: 'Invalid email format (email@cust.pk)',
-                      )
+                      driver
+                          ? FormBuilderValidators.email(
+                              errorText: 'Please provide a valid email address',
+                            )
+                          : FormBuilderValidators.match(
+                              r'^[a-zA-Z0-9._%+-]+@cust\.pk$',
+                              errorText: 'Invalid email format (email@cust.pk)',
+                            )
                     ],
                   ),
                 ),
@@ -208,6 +212,7 @@ class _BodyState extends State<SignUp> {
                 Space.y!,
                 if (driver == true) ...[
                   CustomTextField(
+                    maxLength: 13,
                     name: 'cnic',
                     hint: 'CNIC (without dashes)',
                     textInputType: TextInputType.number,

@@ -11,13 +11,15 @@ import 'package:riteway/screens/routes/confirm_ride.dart';
 import 'package:riteway/widgets/app_button.dart';
 
 class RoutePointsScreen extends StatefulWidget {
-  final Routes route;
   final bool isNav;
+  final int index;
+  final String id;
 
   const RoutePointsScreen({
     Key? key,
-    required this.route,
     required this.isNav,
+    required this.index,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -100,10 +102,12 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
                             child: CircularProgressIndicator(),
                           );
                         } else if (state is RoutesSuccess) {
-                          return Column(
+                          Routes routee = state.data!.firstWhere(
+                              (element) => element.createdAt == widget.id);
+                          return Column( 
                             children: [
                               ...List.generate(
-                                widget.route.routePoints!.length,
+                                routee.routePoints!.length,
                                 (index) => Column(
                                   children: [
                                     Icon(
@@ -126,8 +130,7 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
                                         children: [
                                           Space.y!,
                                           Text(
-                                            widget.route.routePoints![index]
-                                                .name!,
+                                            routee.routePoints![index].name!,
                                             style: AppText.b2,
                                             textAlign: TextAlign.center,
                                           ),
@@ -175,30 +178,52 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
                     Space.y2!,
                   ],
                 )
-              : Column(
-                  children: [
-                    ...List.generate(
-                      widget.route.routePoints!.length,
-                      (index) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+              : BlocBuilder<RoutesCubit, RoutesState>(
+                  builder: (context, state) {
+                    if (state is RoutesLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is RoutesSuccess) {
+                      Routes routee = state.data![widget.index];
+                      return Column(
                         children: [
-                          Space.y1!,
-                          ListTile(
-                            leading: Text(
-                              "${index + 1}",
+                          ...List.generate(
+                            routee.routePoints!.length,
+                            (index) => Column(
+                              children: [
+                                ...List.generate(
+                                  routee.routePoints!.length,
+                                  (index) => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Space.y1!,
+                                      ListTile(
+                                        leading: Text(
+                                          "${index + 1}",
+                                        ),
+                                        title: Text(
+                                          routee.routePoints![index].name!,
+                                          style: AppText.b1!,
+                                        ),
+                                      ),
+                                      const Divider(
+                                        thickness: 2,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
-                            title: Text(
-                              widget.route.routePoints![index].name!,
-                              style: AppText.b1!,
-                            ),
-                          ),
-                          const Divider(
-                            thickness: 2,
                           ),
                         ],
-                      ),
-                    )
-                  ],
+                      );
+                    }
+                    return const Center(
+                      child: Text('No data found'),
+                    );
+                  },
                 ),
         ),
       ),

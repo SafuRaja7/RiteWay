@@ -115,7 +115,8 @@ class _RoutesNameScreenState extends State<RoutesNameScreen> {
                                         builder: (context) {
                                           return RoutePointsScreen(
                                             isNav: widget.isNav!,
-                                            route: state.data![index],
+                                            id: state.data![index].createdAt!,
+                                            index: index,
                                           );
                                         },
                                       ),

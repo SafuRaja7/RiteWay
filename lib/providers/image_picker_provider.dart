@@ -10,6 +10,8 @@ class ImagePickerProvider extends ChangeNotifier {
     XFile? image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       imageQuality: 40,
+      maxHeight: 500,
+      maxWidth: 500,
     );
 
     _file = image;

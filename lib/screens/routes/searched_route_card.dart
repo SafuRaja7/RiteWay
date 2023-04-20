@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:riteway/configs/configs.dart';
+import 'package:riteway/models/routes.dart';
 
 class SearchedRouteCard extends StatefulWidget {
-  final dynamic route;
+  final Routes route;
   const SearchedRouteCard({
     Key? key,
     required this.route,
@@ -19,7 +20,7 @@ class _SearchedRouteCardState extends State<SearchedRouteCard> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        widget.route.name,
+        widget.route.name!,
         style: AppText.b1,
       ),
     );
