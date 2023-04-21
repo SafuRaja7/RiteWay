@@ -104,7 +104,7 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
                         } else if (state is RoutesSuccess) {
                           Routes routee = state.data!.firstWhere(
                               (element) => element.createdAt == widget.id);
-                          return Column( 
+                          return Column(
                             children: [
                               ...List.generate(
                                 routee.routePoints!.length,
@@ -191,32 +191,24 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
                           ...List.generate(
                             routee.routePoints!.length,
                             (index) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                ...List.generate(
-                                  routee.routePoints!.length,
-                                  (index) => Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Space.y1!,
-                                      ListTile(
-                                        leading: Text(
-                                          "${index + 1}",
-                                        ),
-                                        title: Text(
-                                          routee.routePoints![index].name!,
-                                          style: AppText.b1!,
-                                        ),
-                                      ),
-                                      const Divider(
-                                        thickness: 2,
-                                      ),
-                                    ],
+                                Space.y1!,
+                                ListTile(
+                                  leading: Text(
+                                    "${index + 1}",
                                   ),
-                                )
+                                  title: Text(
+                                    routee.routePoints![index].name!,
+                                    style: AppText.b1!,
+                                  ),
+                                ),
+                                const Divider(
+                                  thickness: 2,
+                                ),
                               ],
                             ),
-                          ),
+                          )
                         ],
                       );
                     }
