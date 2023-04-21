@@ -203,7 +203,7 @@ class _ProfileState extends State<Profile> {
                                     name: 'email',
                                     hint: 'Email',
                                     textInputType: TextInputType.text,
-                                    enabled: editProfile,
+                                    enabled: false,
                                     validatorFtn: FormBuilderValidators.compose(
                                       [
                                         FormBuilderValidators.required(
@@ -288,13 +288,40 @@ class _ProfileState extends State<Profile> {
                                     name: 'type',
                                     hint: 'Type',
                                     textInputType: TextInputType.text,
-                                    enabled: editProfile,
+                                    enabled: false,
                                     validatorFtn:
                                         FormBuilderValidators.compose([
                                       FormBuilderValidators.required(
                                         errorText: 'Type is required',
                                       ),
                                     ]),
+                                  ),
+                                ),
+                                Space.x1!,
+                              ],
+                            ),
+                            Space.y!,
+                            Row(
+                              children: [
+                                Text(
+                                  'Phone  ',
+                                  style: AppText.b1b,
+                                ),
+                                Space.x1!,
+                                Expanded(
+                                  child: CustomTextField(
+                                    initialValue: state.data!.phoneNumber,
+                                    name: 'phoneNumber',
+                                    hint: 'Phone Number',
+                                    textInputType: TextInputType.text,
+                                    enabled: editProfile,
+                                    validatorFtn: FormBuilderValidators.compose(
+                                      [
+                                        FormBuilderValidators.required(
+                                          errorText: 'Phone Number is required',
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 Space.x1!,

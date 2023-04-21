@@ -210,6 +210,22 @@ class _BodyState extends State<SignUp> {
                   ),
                 ),
                 Space.y!,
+                CustomTextField(
+                  name: 'phoneNumbner',
+                  hint: 'Phone Number',
+                  textInputType: TextInputType.number,
+                  validatorFtn: FormBuilderValidators.compose(
+                    [
+                      FormBuilderValidators.required(
+                        errorText: 'Phone Number is required',
+                      ),
+                      FormBuilderValidators.numeric(
+                        errorText: 'Please add a valid phone number',
+                      ),
+                    ],
+                  ),
+                ),
+                Space.y!,
                 if (driver == true) ...[
                   CustomTextField(
                     maxLength: 13,
@@ -334,6 +350,7 @@ class _BodyState extends State<SignUp> {
                         data['cnic'],
                         data['vehicle'],
                         '',
+                        data['phoneNumbner'],
                       );
                     } else if (driver == false) {
                       authCubit.signup(
@@ -347,6 +364,7 @@ class _BodyState extends State<SignUp> {
                         '',
                         '',
                         '',
+                        data['phoneNumbner'],
                       );
                     }
                   },

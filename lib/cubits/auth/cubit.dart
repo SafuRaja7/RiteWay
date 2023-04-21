@@ -60,11 +60,12 @@ class AuthCubit extends Cubit<AuthState> {
     String? cnic,
     String? vehicleNumber,
     String? licenseUrl,
+    String? phoneNumber,
   ) async {
     emit(const AuthSignUpLoading());
     try {
       final data = await AuthDataProvider.signUp(fullName, email, password,
-          type, age, gender, cnic, vehicleNumber, url, licenseUrl);
+          type, age, gender, cnic, vehicleNumber, url, licenseUrl, phoneNumber);
 
       emit(AuthSignUpSuccess(data: data));
     } catch (e) {

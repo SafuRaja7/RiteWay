@@ -44,6 +44,7 @@ class AuthDataProvider {
     String? vehicleNumber,
     String? url,
     String? licenseUrl,
+    String? phoneNumber,
   ) async {
     try {
       User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -63,6 +64,7 @@ class AuthDataProvider {
         'cnic': cnic,
         'vehicleNumber': vehicleNumber,
         'licenseUrl': licenseUrl,
+        'phoneNumber': phoneNumber,
       });
 
       await user.updateDisplayName(fullName);
