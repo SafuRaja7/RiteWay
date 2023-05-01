@@ -10,6 +10,7 @@ import 'package:riteway/screens/home/home.dart';
 import 'package:riteway/widgets/app_button.dart';
 import 'package:riteway/widgets/custom_snackbar.dart';
 import 'package:riteway/widgets/custom_text_field.dart';
+import 'package:riteway/widgets/form_data.dart';
 import 'package:riteway/widgets/screen.dart';
 
 class Login extends StatefulWidget {
@@ -66,7 +67,7 @@ class _BodyState extends State<Login> {
           padding: Space.all(1),
           child: FormBuilder(
             key: _formKey,
-            // initialValue: FormData.initalValues(),
+            initialValue: FormData.initalValues(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -138,7 +138,7 @@ class _SearchRouteScreenState extends State<SearchRouteScreen> {
                                       return RoutePointsScreen(
                                         index: e.key,
                                         isNav: false,
-                                        id: e.value.createdAt!,
+                                        id: e.value.createdAt!.toString(),
                                       );
                                     },
                                   ),
