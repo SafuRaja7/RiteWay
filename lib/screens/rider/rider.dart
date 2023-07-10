@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:riteway/app_routes.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
@@ -12,10 +13,10 @@ class Rider extends StatefulWidget {
 }
 
 class _RiderState extends State<Rider> {
+  static const LatLng initPosition = LatLng(33.5467786, 73.181423);
   @override
   Widget build(BuildContext context) {
     App.init(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,13 +30,21 @@ class _RiderState extends State<Rider> {
       ),
       bottomSheet: const BottomSheet(),
       body: Column(
-        children: const [
-          Image(
-            image: AssetImage(
-              'assets/map.png',
+        children: [
+          SizedBox(
+            height: AppDimensions.normalize(200),
+            child: GoogleMap(
+              initialCameraPosition: const CameraPosition(
+                target: initPosition,
+                zoom: 14.5,
+              ),
+              markers: {
+                const Marker(
+                  markerId: MarkerId("source"),
+                  position: initPosition,
+                ),
+              },
             ),
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.contain,
           ),
         ],
       ),

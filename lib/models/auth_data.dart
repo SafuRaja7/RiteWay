@@ -80,10 +80,13 @@ class AuthData {
       age: map['age'] as String,
       gender: map['gender'] != null ? map['gender'] as String : null,
       url: map['url'] != null ? map['url'] as String : null,
-      vehicleNumber: map['vehicleNumber'] != null ? map['vehicleNumber'] as String : null,
+      vehicleNumber:
+          map['vehicleNumber'] != null ? map['vehicleNumber'] as String : null,
       cnic: map['cnic'] != null ? map['cnic'] as String : null,
-      licenseUrl: map['licenseUrl'] != null ? map['licenseUrl'] as String : null,
-      phoneNumber: map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
+      licenseUrl:
+          map['licenseUrl'] != null ? map['licenseUrl'] as String : null,
+      phoneNumber:
+          map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
     );
   }
 
@@ -100,33 +103,32 @@ class AuthData {
   @override
   bool operator ==(covariant AuthData other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.fullName == fullName &&
-      other.email == email &&
-      other.type == type &&
-      other.age == age &&
-      other.gender == gender &&
-      other.url == url &&
-      other.vehicleNumber == vehicleNumber &&
-      other.cnic == cnic &&
-      other.licenseUrl == licenseUrl &&
-      other.phoneNumber == phoneNumber;
+
+    return other.id == id &&
+        other.fullName == fullName &&
+        other.email == email &&
+        other.type == type &&
+        other.age == age &&
+        other.gender == gender &&
+        other.url == url &&
+        other.vehicleNumber == vehicleNumber &&
+        other.cnic == cnic &&
+        other.licenseUrl == licenseUrl &&
+        other.phoneNumber == phoneNumber;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      fullName.hashCode ^
-      email.hashCode ^
-      type.hashCode ^
-      age.hashCode ^
-      gender.hashCode ^
-      url.hashCode ^
-      vehicleNumber.hashCode ^
-      cnic.hashCode ^
-      licenseUrl.hashCode ^
-      phoneNumber.hashCode;
+        fullName.hashCode ^
+        email.hashCode ^
+        type.hashCode ^
+        age.hashCode ^
+        gender.hashCode ^
+        url.hashCode ^
+        vehicleNumber.hashCode ^
+        cnic.hashCode ^
+        licenseUrl.hashCode ^
+        phoneNumber.hashCode;
   }
 }

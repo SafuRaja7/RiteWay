@@ -6,6 +6,7 @@ import 'package:riteway/app_routes.dart';
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
 import 'package:riteway/cubits/auth/cubit.dart';
+import 'package:riteway/screens/ForgotPassword.dart';
 import 'package:riteway/screens/home/home.dart';
 import 'package:riteway/widgets/app_button.dart';
 import 'package:riteway/widgets/custom_snackbar.dart';
@@ -82,11 +83,11 @@ class _BodyState extends State<Login> {
                   ),
                 ),
                 Space.y!,
-                // Text(
-                //   'Welcome to\nRiteWay',
-                //   style: AppText.h1b,
-                // ),
-                // Space.y!,
+                Text(
+                  'Welcome to\nRiteWay',
+                  style: AppText.h1b,
+                ),
+                Space.y!,
                 Text(
                   'Please log in to your account',
                   style: AppText.b2!.copyWith(
@@ -119,6 +120,29 @@ class _BodyState extends State<Login> {
                   ),
                 ),
                 Space.y1!,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const ForgotPassword();
+                            },
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Forgot Password',
+                        style:
+                            AppText.l1b!.copyWith(color: AppTheme.c!.primary),
+                      ),
+                    ),
+                  ],
+                ),
+                Space.y1!,
                 AppButton(
                   child: Text(
                     'Login',
@@ -139,7 +163,6 @@ class _BodyState extends State<Login> {
                     }
                   },
                 ),
-                Space.y!,
                 Space.y1!,
                 Center(
                   child: Row(

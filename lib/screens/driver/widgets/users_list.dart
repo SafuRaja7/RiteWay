@@ -62,38 +62,43 @@ class _UsersListScreenState extends State<UsersList> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Space.y1!,
-            authData.isNotEmpty
-                ? ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: authData.length,
-                    itemBuilder: (context, index) {
-                      final user = authData[index];
-                      return Column(
-                        children: [
-                          ListTile(
-                            leading: const CircleAvatar(
-                              child: Icon(
-                                Icons.flutter_dash,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Space.y1!,
+              authData.isNotEmpty
+                  ? ListView.builder(
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: authData.length,
+                      itemBuilder: (context, index) {
+                        final user = authData[index];
+                        return Column(
+                          children: [
+                            if (user.type == 'Driver') ...[
+                              ListTile(
+                                leading: const CircleAvatar(
+                                  child: Icon(
+                                    Icons.flutter_dash,
+                                  ),
+                                ),
+                                title: Text(user.fullName!),
+                                subtitle: Text(user.email),
                               ),
-                            ),
-                            title: Text(user.fullName!),
-                            subtitle: Text(user.email),
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.grey[300],
-                          ),
-                        ],
-                      );
-                    },
-                  )
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-          ],
+                              Divider(
+                                thickness: 1,
+                                color: Colors.grey[300],
+                              ),
+                            ],
+                          ],
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+            ],
+          ),
         ),
       ),
     );

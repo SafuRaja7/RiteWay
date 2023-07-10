@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:riteway/app_routes.dart';
 
 import 'package:riteway/configs/app.dart';
 import 'package:riteway/configs/configs.dart';
@@ -55,169 +56,186 @@ class _RoutePointsScreenState extends State<RoutePointsScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: !widget.isNav
-              ? Column(
+          child: Column(
+            children: [
+              Space.y1!,
+              Center(
+                child: Text(
+                  'Processing your request',
+                  style: AppText.h3,
+                ),
+              ),
+              Space.y2!,
+              Lottie.asset(
+                'assets/loading.json',
+                height: AppDimensions.normalize(50),
+              ),
+              Space.y2!,
+              Container(
+                width: AppDimensions.normalize(120),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.black54,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Space.y1!,
-                    Center(
-                      child: Text(
-                        'Processing your request',
-                        style: AppText.h3,
-                      ),
-                    ),
-                    Space.y2!,
-                    Lottie.asset(
-                      'assets/loading.json',
-                      height: AppDimensions.normalize(50),
-                    ),
-                    Space.y2!,
-                    Container(
-                      width: AppDimensions.normalize(120),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Space.y!,
-                          Text(
-                            'Capital University of Science\nand technology',
-                            style: AppText.b2,
-                            textAlign: TextAlign.center,
-                          ),
-                          Space.y!,
-                        ],
-                      ),
+                    Space.y!,
+                    Text(
+                      'Capital University of Science\nand technology',
+                      style: AppText.b2,
+                      textAlign: TextAlign.center,
                     ),
                     Space.y!,
-                    BlocBuilder<RoutesCubit, RoutesState>(
-                      builder: (context, state) {
-                        if (state is RoutesLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (state is RoutesSuccess) {
-                          Routes routee = state.data!.firstWhere(
-                              (element) => element.createdAt == widget.id);
-                          return Column(
+                  ],
+                ),
+              ),
+              Space.y!,
+              BlocBuilder<RoutesCubit, RoutesState>(
+                builder: (context, state) {
+                  if (state is RoutesLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is RoutesSuccess) {
+                    Routes routee = state.data!.firstWhere(
+                        (element) => element.createdAt == widget.id);
+                    return Column(
+                      children: [
+                        ...List.generate(
+                          routee.routePoints!.length,
+                          (index) => Column(
                             children: [
-                              ...List.generate(
-                                routee.routePoints!.length,
-                                (index) => Column(
+                              Icon(
+                                Icons.arrow_downward,
+                                size: AppDimensions.normalize(10),
+                              ),
+                              Container(
+                                width: AppDimensions.normalize(120),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.arrow_downward,
-                                      size: AppDimensions.normalize(10),
-                                    ),
-                                    Container(
-                                      width: AppDimensions.normalize(120),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Space.y!,
-                                          Text(
-                                            routee.routePoints![index].name!,
-                                            style: AppText.b2,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          Space.y!,
-                                        ],
-                                      ),
+                                    Space.y!,
+                                    Text(
+                                      routee.routePoints![index].name!,
+                                      style: AppText.b2,
+                                      textAlign: TextAlign.center,
                                     ),
                                     Space.y!,
                                   ],
                                 ),
                               ),
+                              Space.y!,
                             ],
-                          );
-                        }
-                        return const Center(
-                          child: Text('No data found'),
-                        );
-                      },
-                    ),
-                    Space.y1!,
-                    AppButton(
-                      width: AppDimensions.normalize(80),
-                      child: Text(
-                        'Confirm Ride',
-                        style: AppText.l1!.cl(Colors.white),
-                      ),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const ConfirmRideScreen();
-                          },
+                          ),
                         ),
-                      ),
-                    ),
-                    Space.y!,
-                    AppButton(
-                      width: AppDimensions.normalize(80),
-                      child: Text(
-                        'Cancel',
-                        style: AppText.l1!.cl(Colors.white),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    Space.y2!,
-                  ],
-                )
-              : BlocBuilder<RoutesCubit, RoutesState>(
-                  builder: (context, state) {
-                    if (state is RoutesLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (state is RoutesSuccess) {
-                      Routes routee = state.data![widget.index];
-                      return Column(
-                        children: [
-                          ...List.generate(
-                            routee.routePoints!.length,
-                            (index) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Space.y1!,
-                                ListTile(
-                                  leading: Text(
-                                    "${index + 1}",
-                                  ),
-                                  title: Text(
-                                    routee.routePoints![index].name!,
-                                    style: AppText.b1!,
-                                  ),
-                                ),
-                                const Divider(
-                                  thickness: 2,
-                                ),
-                              ],
+                        Space.y1!,
+                        AppButton(
+                          width: AppDimensions.normalize(80),
+                          child: Text(
+                            'Confirm Ride',
+                            style: AppText.l1!.cl(Colors.white),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ConfirmRideScreen(
+                                  drivers: routee.drivers!,
+                                  routes: routee,
+                                );
+                              },
                             ),
-                          )
-                        ],
-                      );
-                    }
-                    return const Center(
-                      child: Text('No data found'),
+                          ),
+                        ),
+                      ],
                     );
-                  },
-                ),
+                  }
+                  return const Center(
+                    child: Text('No data found'),
+                  );
+                },
+              ),
+              Space.y2!,
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class BottomSheet extends StatelessWidget {
+  const BottomSheet({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Divider(
+            thickness: 2,
+            color: Colors.grey,
+            indent: 165,
+            endIndent: 165,
+          ),
+          Space.y!,
+          AppButton(
+            width: AppDimensions.normalize(100),
+            child: Text(
+              'View Students',
+              style: AppText.l1b!.cl(Colors.white),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.usersList);
+            },
+          ),
+          Space.y!,
+          AppButton(
+            width: AppDimensions.normalize(100),
+            child: Text(
+              'View Routes',
+              style: AppText.l1b!.cl(Colors.white),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.routesNameScreen,
+              );
+            },
+          ),
+          Space.y1!,
+        ],
       ),
     );
   }

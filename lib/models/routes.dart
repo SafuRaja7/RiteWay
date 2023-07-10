@@ -10,11 +10,13 @@ class Routes {
   final String? createdAt;
   final int? fare;
   final List<RoutePoints>? routePoints;
+  final List<Map<String, dynamic>>? drivers;
   Routes({
     required this.name,
     this.createdAt,
     this.fare,
     this.routePoints,
+    this.drivers,
   });
 
   Routes copyWith({
@@ -22,12 +24,14 @@ class Routes {
     String? createdAt,
     int? fare,
     List<RoutePoints>? routePoints,
+    List<Map<String, dynamic>>? drivers,
   }) {
     return Routes(
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       fare: fare ?? this.fare,
       routePoints: routePoints ?? this.routePoints,
+      drivers: drivers ?? this.drivers,
     );
   }
 
@@ -37,6 +41,7 @@ class Routes {
       'createdAt': createdAt,
       'fare': fare,
       'routePoints': routePoints!.map((x) => x.toMap()).toList(),
+      'drivers': drivers,
     };
   }
 
@@ -49,6 +54,13 @@ class Routes {
         (map['routePoints'] ?? '' as List<Map<String, dynamic>>)
             .map<RoutePoints?>((x) => RoutePoints.fromMap(x)),
       ),
+      drivers: map['drivers'] != null
+          ? List<Map<String, dynamic>>.from(
+              (map['drivers'] as List<dynamic>).map<Map<String, dynamic>?>(
+                (x) => x,
+              ),
+            )
+          : null,
     );
   }
 
@@ -59,7 +71,7 @@ class Routes {
 
   @override
   String toString() {
-    return 'Routes(name: $name, createdAt: $createdAt, fare: $fare, routePoints: $routePoints)';
+    return 'Routes(name: $name, createdAt: $createdAt, fare: $fare, routePoints: $routePoints, drivers: $drivers)';
   }
 
   @override
@@ -69,7 +81,8 @@ class Routes {
     return other.name == name &&
         other.createdAt == createdAt &&
         other.fare == fare &&
-        listEquals(other.routePoints, routePoints);
+        listEquals(other.routePoints, routePoints) &&
+        listEquals(other.drivers, drivers);
   }
 
   @override
@@ -77,6 +90,7 @@ class Routes {
     return name.hashCode ^
         createdAt.hashCode ^
         fare.hashCode ^
-        routePoints.hashCode;
+        routePoints.hashCode ^
+        drivers.hashCode;
   }
 }
